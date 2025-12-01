@@ -26,3 +26,5 @@ Uses SQLAlchemy and supports PostgreSQL via `DATABASE_URL` env var. Defaults to 
 
 ## Run tests
 From project root run: `pytest -q`
+
+![CI](https://github.com/sdudevops-2025/devops-backend/actions/workflows/ci.yml/badge.svg)
