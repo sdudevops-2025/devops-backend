@@ -1,34 +1,36 @@
-name: CI Pipeline
+name: CI
 
 on:
   push:
-    branches: ["main", "feature/*"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout репозитория
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2. Установка Python
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
+      # 3. Установка зависимостей
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r backend/requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
+      # 4. Запуск тестов pytest
       - name: Run tests
-        run: |
-          cd backend
-          pytest -q
+        run: pytest -q
 
+      # 5. Сборка Docker-образа (проверка Dockerfile)
       - name: Build Docker image
-        run: |
-          docker build -t quietplaces-backend ./backend
+        run: docker build -t devops-backend .
