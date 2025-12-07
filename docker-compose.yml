@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:15
+    container_name: quietplaces_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: quietplaces
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: quietplaces_backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: quietplaces
+    ports:
+      - "8000:8000"
+    restart: always
+
+volumes:
+  pgdata:
