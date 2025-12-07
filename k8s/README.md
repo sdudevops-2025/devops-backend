@@ -15,11 +15,6 @@ Make sure Docker Desktop is running before proceeding.
 minikube start --driver=docker
 ```
 
-Or for k3s:
-```bash
-# k3s should already be running
-sudo systemctl status k3s
-```
 
 ### 2. Build Docker Image
 
@@ -30,16 +25,6 @@ eval $(minikube docker-env)
 docker build -t quietplaces-backend:latest .
 ```
 
-For k3s:
-```bash
-# Build normally
-docker build -t quietplaces-backend:latest .
-# Import to k3s
-sudo k3s ctr images import quietplaces-backend.tar
-# Or save and import
-docker save quietplaces-backend:latest -o quietplaces-backend.tar
-sudo k3s ctr images import quietplaces-backend.tar
-```
 
 ### 3. Apply Kubernetes Resources
 ```bash
@@ -67,12 +52,6 @@ For Minikube:
 minikube service quietplaces-service --url
 ```
 
-For k3s:
-```bash
-# Get node IP
-kubectl get nodes -o wide
-# Access via: http://<NODE_IP>:30080
-```
 
 Or use port-forward for testing:
 ```bash
