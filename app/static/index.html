@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuietPlaces - Find & Share Serene Locations</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary: #4a6fa5;
+        --primary-dark: #385d8a;
+        --secondary: #6b9080;
+        --light: #f8f9fa;
+        --dark: #2c3e50;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+        --success: #6b9080;
+        --border-radius: 12px;
+        --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background-color: #f9fbfd;
+        color: var(--dark);
+        line-height: 1.6;
+        padding: 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    header {
+        text-align: center;
+        padding: 40px 20px 30px;
+        background: white;
+        border-radius: var(--border-radius);
+        margin-bottom: 30px;
+        box-shadow: var(--box-shadow);
+        position: relative;
+        overflow: hidden;
+    }
+
+    header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+    }
+
+    h1 {
+        color: var(--dark);
+        font-size: 2.8rem;
+        margin-bottom: 10px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .subtitle {
+        color: var(--gray);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto 25px;
+    }
+
+    .tagline {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        color: var(--secondary);
+        font-weight: 500;
+        margin-top: 15px;
+    }
+
+    .main-layout {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    @media (max-width: 900px) {
+        .main-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 30px;
+        transition: var(--transition);
+        height: fit-content;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    h2 {
+        color: var(--dark);
+        font-size: 1.6rem;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--light-gray);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    h2 i {
+        color: var(--primary);
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--dark);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid var(--light-gray);
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: var(--transition);
+        background-color: #fcfdfe;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
+        background-color: white;
+    }
+
+    .rating-input {
+        display: flex;
+        gap: 5px;
+        margin-top: 8px;
+    }
+
+    .rating-input i {
+        font-size: 1.8rem;
+        color: var(--light-gray);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .rating-input i.active {
+        color: #ffc107;
+    }
+
+    .rating-input i:hover {
+        transform: scale(1.1);
+    }
+
+    button {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background: linear-gradient(to right, var(--primary-dark), #2f4d7a);
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(74, 111, 165, 0.25);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    .places-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .place-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 25px;
+        transition: var(--transition);
+        position: relative;
+        border-top: 5px solid var(--secondary);
+    }
+
+    .place-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .place-card h3 {
+        font-size: 1.4rem;
+        color: var(--dark);
+        margin-bottom: 12px;
+        line-height: 1.3;
+    }
+
+    .place-detail {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        color: var(--gray);
+        font-size: 0.95rem;
+    }
+
+    .place-detail i {
+        width: 22px;
+        color: var(--primary);
+        margin-right: 12px;
+        font-size: 1.1rem;
+    }
+
+    .rating-stars {
+        color: #ffc107;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        margin-top: 5px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--gray);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--light-gray);
+        margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: var(--dark);
+    }
+
+    footer {
+        text-align: center;
+        padding: 25px;
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-top: 40px;
+        border-top: 1px solid var(--light-gray);
+    }
+
+    .notification {
+        position: fixed;
+        top: 30px;
+        right: 30px;
+        padding: 18px 24px;
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transform: translateX(150%);
+        transition: transform 0.4s ease;
+        z-index: 1000;
+        border-left: 5px solid var(--success);
+    }
+
+    .notification.show {
+        transform: translateX(0);
+    }
+
+    .notification i {
+        font-size: 1.5rem;
+        color: var(--success);
+    }
+
+    .notification.success {
+        border-left-color: var(--success);
+    }
+
+    .notification.error {
+        border-left-color: #e74c3c;
+    }
+
+    .notification.error i {
+        color: #e74c3c;
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2.2rem;
+        }
+        
+        .container {
+            padding: 15px;
+        }
+        
+        .card {
+            padding: 25px 20px;
+        }
+        
+        .places-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>QuietPlaces</h1>
+        <p class="subtitle">Discover and share serene locations perfect for relaxation, focus, and peaceful moments.</p>
+        <div class="tagline">
+            <i class="fas fa-leaf"></i>
+            <span>Find your moment of calm</span>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <div class="card">
+            <h2><i class="fas fa-plus-circle"></i> Add New Place</h2>
+            <form id="placeForm">
+                <div class="form-group">
+                    <label for="name">Place Name *</label>
+                    <input type="text" id="name" placeholder="e.g., Central Park, Library Cafe" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="Street, City, Country">
+                </div>
+                
+                <div class="form-group">
+                    <label>Rating (1-5)</label>
+                    <div class="rating-input" id="ratingStars">
+                        <i class="far fa-star" data-value="1"></i>
+                        <i class="far fa-star" data-value="2"></i>
+                        <i class="far fa-star" data-value="3"></i>
+                        <i class="far fa-star" data-value="4"></i>
+                        <i class="far fa-star" data-value="5"></i>
+                    </div>
+                    <input type="hidden" id="rating" value="">
+                </div>
+                
+                <button type="submit">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Add Quiet Place
+                </button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-map-signs"></i> Discover Quiet Places</h2>
+            <div id="places" class="places-container">
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-binoculars"></i>
+                    <h3>No places added yet</h3>
+                    <p>Be the first to add a quiet place for relaxation and focus.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>QuietPlaces &copy; 2023 | Share your peaceful discoveries with the world.</p>
+        <p style="margin-top: 5px; font-size: 0.85rem; color: #a0aec0;">
+            <i class="fas fa-heart" style="color: #e74c3c;"></i> Made for moments of peace and tranquility
+        </p>
+    </footer>
+</div>
+
+<div id="notification" class="notification">
+    <i class="fas fa-check-circle"></i>
+    <div>
+        <strong id="notificationTitle">Success!</strong>
+        <p id="notificationMessage">Place added successfully.</p>
+    </div>
+</div>
+
+<script>
+const apiUrl = 'http://127.0.0.1:8000';
+
+const placeForm = document.getElementById('placeForm');
+const placesContainer = document.getElementById('places');
+const emptyState = document.getElementById('emptyState');
+const ratingStars = document.querySelectorAll('.rating-input i');
+const ratingInput = document.getElementById('rating');
+const notification = document.getElementById('notification');
+
+ratingStars.forEach(star => {
+    star.addEventListener('click', () => {
+        const value = parseInt(star.getAttribute('data-value'));
+        ratingInput.value = value;
+        
+        ratingStars.forEach((s, index) => {
+            if (index < value) {
+                s.classList.remove('far');
+                s.classList.add('fas', 'active');
+            } else {
+                s.classList.remove('fas', 'active');
+                s.classList.add('far');
+            }
+        });
+    });
+});
+
+function showNotification(title, message, type = 'success') {
+    document.getElementById('notificationTitle').textContent = title;
+    document.getElementById('notificationMessage').textContent = message;
+    
+    notification.className = `notification ${type}`;
+    notification.querySelector('i').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+    
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 4000);
+}
+
+function formatRating(rating) {
+    if (!rating) return 'Not rated';
+    
+    let stars = '';
+    for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+            stars += '<i class="fas fa-star"></i>';
+        } else {
+            stars += '<i class="far fa-star"></i>';
+        }
+    }
+    return `<div class="rating-stars">${stars}</div>`;
+}
+
+async function fetchPlaces() {
+    try {
+        const res = await fetch(`${apiUrl}/places`);
+        const places = await res.json();
+        
+        placesContainer.innerHTML = '';
+        
+        if (places.length === 0) {
+            emptyState.style.display = 'block';
+            return;
+        }
+        
+        emptyState.style.display = 'none';
+        
+        places.forEach(place => {
+            const placeCard = document.createElement('div');
+            placeCard.className = 'place-card';
+            placeCard.innerHTML = `
+                <h3>${place.name}</h3>
+                <div class="place-detail">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${place.address || 'Address not provided'}</span>
+                </div>
+                <div class="place-detail">
+                    <i class="fas fa-star"></i>
+                    <span>${place.rating ? `Rated ${place.rating}/5` : 'Not rated yet'}</span>
+                </div>
+                ${place.rating ? formatRating(place.rating) : ''}
+            `;
+            placesContainer.appendChild(placeCard);
+        });
+    } catch (error) {
+        console.error('Error fetching places:', error);
+        showNotification('Connection Error', 'Could not load places. Please try again.', 'error');
+    }
+}
+
+placeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('name').value;
+    const address = document.getElementById('address').value;
+    const rating = ratingInput.value || null;
+    
+    try {
+        const res = await fetch(`${apiUrl}/places`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                name, 
+                address: address || null, 
+                rating: rating ? Number(rating) : null 
+            })
+        });
+
+        if (res.ok) {
+            placeForm.reset();
+            ratingStars.forEach(star => {
+                star.classList.remove('fas', 'active');
+                star.classList.add('far');
+            });
+            
+            showNotification('Place Added', `${name} has been added to QuietPlaces.`, 'success');
+            
+            fetchPlaces();
+        } else {
+            showNotification('Error', 'Failed to add place. Please try again.', 'error');
+        }
+    } catch (error) {
+        console.error('Error adding place:', error);
+        showNotification('Connection Error', 'Could not connect to server. Please check your connection.', 'error');
+    }
+});
+
+fetchPlaces();
+
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        if (placesContainer.children.length === 1) {
+        }
+    }, 500);
+});
+</script>
+</body>
+</html>
