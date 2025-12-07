@@ -1,7 +1,7 @@
 # Kubernetes Deployment Guide
 
 ## Prerequisites
-- Minikube or k3s installed
+- Minikube 
 - Docker Desktop running
 - kubectl configured
 
